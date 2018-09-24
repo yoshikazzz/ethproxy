@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  db:
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${TYPEORM_PASSWORD}
+      MYSQL_DATABASE: ${TYPEORM_DATABASE}
+  redis:
+    image: redis:latest
+  web:
+    build: .
+    volumes:
+      - .:/code
+    ports:
+      - "${PORT}:${PORT}"
+    depends_on:
+      - db
+      - redis
+    command: npm run build && npm start
